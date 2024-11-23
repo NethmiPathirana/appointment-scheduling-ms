@@ -1,0 +1,39 @@
+server:
+  port: 8092
+
+spring:
+  application:
+    name: appointmentScheduling
+
+  datasource:
+    url: jdbc:mysql://heealthsyncdb.cjwgky6gwqig.eu-north-1.rds.amazonaws.com:3306/appointment_scheduling_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: root
+    password: Thushari1002
+  #    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update # update tables
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQLDialect
+
+cloud:
+  aws:
+    credentials:
+      accessKey: AKIAVFIWIYOJYL5GA35L
+      secretKey: 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
+    region:
+      static: eu-north-1
+    stack:
+      auto: false
+
+application:
+  bucket:
+    name: healthsyncnethmi
+
+logging:
+  level:
+    root: INFO
+    com.amazonaws: INFO
+    com.appointment.scheduling: INFO
+
