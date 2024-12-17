@@ -23,7 +23,7 @@ public class AppointmentSchedulerTask {
         this.s3Service = s3Service;
     }
 
-    @Scheduled(cron = "*/30 * * * * *") // Cron expression runs every 30 seconds
+    @Scheduled(cron = "0 0 0 * * *") // Runs every 24 hours at midnight
     public void generateAppointmentFrequencyReport() {
         LocalDate currentDate = LocalDate.now();
         try {

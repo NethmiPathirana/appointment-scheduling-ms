@@ -27,16 +27,37 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      # Step 3: Build the project
+      # Step 3: Run Maven Tests
+      - name: Run Maven Tests
+        run: mvn test
+
+      # Step 4: Build the project using Maven
       - name: Build with Maven
         run: mvn clean install -DskipTests
 
-      # Step 4: Authenticate to GHCR with Personal Access Token (PAT)
+      # Step 5: Authenticate to GHCR with Personal Access Token (PAT)
       - name: Authenticate to GHCR
         run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      # Step 5: Build and Push Docker Image
-      - name: Build and Push Docker Image
+      # Step 6: Build Docker Image
+      - name: Build Docker Image
         run: |
           docker build -t ghcr.io/nethmipathirana/appointment-scheduling-img:latest .
+
+      # Step 7: Check if the JAR file exists in the Docker image
+      - name: Check if JAR file exists in Docker image
+        run: |
+          # Run the container and check if the JAR file exists in the /app directory
+          docker run --rm ghcr.io/nethmipathirana/appointment-scheduling-img:latest ls /app
+          if [ "$(docker run --rm ghcr.io/nethmipathirana/appointment-scheduling-img:latest ls /app | grep app.jar)" == "" ]; then
+            echo "ERROR: app.jar not found in the Docker image."
+            exit 1
+          else
+            echo "app.jar found in the Docker image."
+          fi
+
+      # Step 8: Push Docker Image to GHCR
+      - name: Push Docker Image to GHCR
+        run: |
           docker push ghcr.io/nethmipathirana/appointment-scheduling-img:latest
+          echo "Pushed new Docker image."
